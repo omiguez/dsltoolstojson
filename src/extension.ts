@@ -130,7 +130,7 @@ function DataToDSLTool(data: any, recursionLevel: number = 0) :string
 				output += BuildQuote(recursionLevel);
 				output += property;
 				output += BuildQuote(recursionLevel);
-				output += ": ";	
+				output += ":";	
 				output += BuildQuote(recursionLevel);
 				output += DataToDSLTool(data[property], recursionLevel + 1);
 				output += BuildQuote(recursionLevel);
@@ -150,7 +150,14 @@ function DataToDSLTool(data: any, recursionLevel: number = 0) :string
 /// <param name="recursionLevel"> The current recursion level. </param>
 /// <returns> A string with the backbars and quote. </returns>
 function BuildQuote(recursionLevel: number){
-	return "\\".repeat(recursionLevel) + '"';
+	let backbarAmount = 0;
+	
+	for (let i = 1; i <= recursionLevel; i++)
+	{
+		backbarAmount = backbarAmount * 2 + 1;
+	}
+
+	return "\\".repeat(backbarAmount) + '"';
 }
 
 /// <summary> Checks if the given object is a primitive type. </summary>
