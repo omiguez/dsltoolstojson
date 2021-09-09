@@ -7,7 +7,7 @@
 		"vscode": "^1.60.0"
 	},
 	"categories": [
-		"Other"
+		"Formatters"
 	],
 	"activationEvents": [
 		"onCommand:dsltoolstojson.dsltoolstojson",
@@ -26,6 +26,7 @@
 			}
 		]
 	},
+	"publisher": "omiguezalonso",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
