@@ -10,7 +10,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:dsltoolstojson.dsltoolstojson"
+		"onCommand:dsltoolstojson.dsltoolstojson",
+		"onCommand:dsltoolstojson.jsontodsltool"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -18,6 +19,10 @@
 			{
 				"command": "dsltoolstojson.dsltoolstojson",
 				"title": "Convert DSLTool output to JSON"
+			},
+			{
+				"command": "dsltoolstojson.jsontodsltool",
+				"title": "Convert JSON to DSLTool output"
 			}
 		]
 	},
