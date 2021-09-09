@@ -35,7 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
 		let {operationRange, text} = GetTextToWorkWith(editor);
 
 		// Replace with modified version.
-		editor!.edit(editBuilder => editBuilder.replace(operationRange, "still working on this one"));	
+		editor!.edit(editBuilder => editBuilder.replace(operationRange, JSONToDSLTool(text)));	
 	}));
 }
 
@@ -59,6 +59,71 @@ function DSLToolToJSON(text: string){
 	text = text.replace(/"\[\{/gi, "[{");
 	text = text.replace(/\}\]"/gi, "}]");
 	return text;
+}
+
+function JSONToDSLTool(json: string) : string
+{
+	try{
+		let data = JSON.parse(json);
+		if (data == null){
+			console.log("Data was null");
+			return json;
+		}
+
+		console.log("Parse successful");
+		return DataToDSLTool(data);
+	}
+	catch(error){
+		console.log("Unexpected error", error);
+		return json;
+	}	
+}
+
+function DataToDSLTool(data: any, indexingLevel: number = 0) :string
+{
+	let output: string = "";
+	if (Array.isArray(data)){
+		output+="[";
+		for (let i = 0; i < data.length; i++){
+			output+=DataToDSLTool(data[i], indexingLevel)
+			if (i < data.length - 1)
+			{
+				output+=",";
+			}
+		}
+		output+="]"
+	}
+	else if (IsPrimitive(data)){
+		output += data;
+	}
+	else {
+		output += "{";
+		for (let property in data){
+			if (data.hasOwnProperty(property)) {
+				output += BuildQuote(indexingLevel);
+				output += property;
+				output += BuildQuote(indexingLevel);
+				output += ": ";	
+				output += BuildQuote(indexingLevel);
+				output += DataToDSLTool(data[property], indexingLevel + 1);
+				output += BuildQuote(indexingLevel);
+			}
+			
+			output += ","
+		}
+		output = output.substring(0, output.length - 1);
+		output += "}";		
+	}
+
+	return output;
+}
+
+function BuildQuote(indexingLevel: number){
+	return "\\".repeat(indexingLevel) + '"';
+}
+
+function IsPrimitive(test: any) {
+    return test !== Object(test);
 }
 
 // This method is called when the extension is deactivated.
